@@ -1,0 +1,215 @@
+<!-- TODO: Agregar estilos una vez lo entreguen -->
+<div *ngIf="formStep != 4">
+    <div class="form-row">
+        <label>Estás cerca de finalizar</label>
+    </div>
+    <div class="form-row">
+        <label>Completa los campos requeridos en el formulario para denunciar el Siniestro</label>
+    </div>
+</div>
+<div id="DatosAsegurado" class="row" *ngIf="formStep == 1">
+    <div class="col-2"></div>
+    <div class="col-8">
+        <form id="datosAsegurado" [formGroup]="datosAseguradoForms" (submit)="submitForm()">
+            <label>DNI:</label>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Escribí acá tu DNI"
+                    [(ngModel)]="asegurado.dniAsegurado" [ngModelOptions]="{standalone: true}" disabled />
+            </div>
+            <label>Nombre y Apellido:</label>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Escribí acá tu nombre y apellido"
+                    [(ngModel)]="asegurado.nomApeAsegurado" [ngModelOptions]="{standalone: true}" disabled />
+            </div>
+            <label>Fecha de fallecimiento:</label>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Escribí acá la fecha de fallecimiento"
+                    [(ngModel)]="fechaFallecimientoAsegurado" [ngModelOptions]="{standalone: true}" disabled />
+            </div>
+            <label>Tipo de Siniestro:</label>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" placeholder="Escribí acá el tipo de siniestro"
+                    [(ngModel)]="tipoSiniestro" [ngModelOptions]="{standalone: true}" disabled />
+            </div>
+            <div>
+                <!-- TODO: Arreglar radio buttons -->
+                <label for="PreguntaPoliza">¿Sabes si tenía pólizas en otra compañía?</label>
+                <div class="form-row">
+                    <input type="radio" name="poliza" [value]="true" [(ngModel)]="otraPoliza"
+                        [ngModelOptions]="{standalone: true}" style="margin-top: 1%;">
+                    <label for="Si">Sí</label>
+                    <div class="col-1"></div>
+                    <input type="radio" name="poliza" [value]="false" [(ngModel)]="otraPoliza"
+                        [ngModelOptions]="{standalone: true}" style="margin-top: 1%;">
+                    <label for="No">No</label>
+                </div>
+            </div>
+            <div>
+                <label for="PreguntaRelativos">¿Hace cuánto conocías a esta persona?</label>
+                <div class="form-row">
+                    <div class="col-3">
+                        <!-- TODO: Arreglar radio buttons -->
+                        <div class="row">
+                            <input type="radio" name="tiempo" value="meses" style="margin-top: 1%;">
+                            <label for="Años">Años</label>
+                        </div>
+                        <div class="row">
+                            <input type="radio" name="tiempo" value="años" style="margin-top: 1%;">
+                            <label for="Meses">Meses</label>
+                        </div>
+                    </div>
+                    <div class="col-3 input-group mb-3">
+                        <input type="number" class="form-control">
+                    </div>
+                    <div class="col-6"></div>
+                </div>
+            </div>
+            <div class="form-row" *ngIf="datosCliente.beneficiario != null">
+                <label for="Caracter">Estás reclamando el importe del seguro en carácter de:</label>
+                <div class="input-group mb-3">
+                    <input type="text" class="form-control" placeholder="Ingresá acá el tipo de carácter"
+                        [(ngModel)]="terceraPersona.relacionAsegurado" [ngModelOptions]="{standalone: true}" />
+                </div>
+            </div>
+            <div class="form-row" style="margin-top: 20px;">
+                <button class="pointer col-3" (click)="substractStep()">Atrás</button>
+                <div class="col-1"></div>
+                <button class="pointer col-8" (click)="onClickFormStep()">Continuar</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-2"></div>
+</div>
+<div id="datosBeneficiario" class="row" *ngIf="formStep == 2">
+    <div class="col-2"></div>
+    <div class="col-8" *ngIf="datosCliente.beneficiario != null">
+        <form id="datosAsegurado" [formGroup]="datosAseguradoForms" (submit)="submitForm()">
+            <label for="DNI">DNI:</label>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" [(ngModel)]="terceraPersona.dniTercero"
+                    [ngModelOptions]="{standalone: true}" disabled />
+            </div>
+            <label for="NomApe">Nombre y Apellido:</label>
+            <div class="input-group mb-3">
+                <input type="text" class="form-control" [(ngModel)]="terceraPersona.nomApeTercero"
+                    [ngModelOptions]="{standalone: true}" disabled />
+            </div>
+            <div class="form-group">
+                <label for="FechaNacimiento">Fecha de nacimiento</label>
+                <div class="form-row">
+                    <input class="form-control" placeholder="yyyy-mm-dd" formControlName="fechaNacimiento" ngbDatepicker
+                        #fechaNacimiento="ngbDatepicker" (click)="fechaNacimiento.toggle()">
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-6">
+                    <label for="Domicilio">Domicilio</label>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" [(ngModel)]="terceraPersona.domicilio"
+                            [ngModelOptions]="{standalone: true}" placeholder="Av/Calle" />
+                    </div>
+                </div>
+                <div class="col-3">
+                    <label for="Altura">Altura</label>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" [(ngModel)]="terceraPersona.altura"
+                            [ngModelOptions]="{standalone: true}" placeholder="N°" />
+                    </div>
+                </div>
+                <div class="col-3">
+                    <label for="Piso">Piso</label>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" [(ngModel)]="terceraPersona.piso"
+                            [ngModelOptions]="{standalone: true}" placeholder="N°" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-row">
+                <div class="col-4">
+                    <label for="Localidad">Localidad</label>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" [(ngModel)]="terceraPersona.localidad"
+                            [ngModelOptions]="{standalone: true}" placeholder="Elige tu ciudad" />
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label for="CodigoPostal">Código Postal</label>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" [(ngModel)]="terceraPersona.codPostal"
+                            [ngModelOptions]="{standalone: true}" placeholder="N°" />
+                    </div>
+                </div>
+                <div class="col-4">
+                    <label for="Provincia">Provincia</label>
+                    <div class="input-group mb-3">
+                        <input type="text" class="form-control" [(ngModel)]="terceraPersona.provincia"
+                            [ngModelOptions]="{standalone: true}" placeholder="Elige tu provincia" />
+                    </div>
+                </div>
+            </div>
+            <div class="form-row" style="margin-top: 20px;">
+                <button class="pointer col-3" (click)="substractFormStep()">Atrás</button>
+                <div class="col-1"></div>
+                <button class="pointer col-8" (click)="onClickFormStep()">Continuar</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-2"></div>
+</div>
+<div id="Capturas" class="row" *ngIf="formStep == 3">
+    <div class="col-2">
+    </div>
+    <div class="col-8">
+        <label for="SubirDocumentos">Subir Documentos</label>
+        <div class="form-row">
+            <div *ngIf="!imagenDniFront">
+                <label class="image-upload-container btn btn-bwm">
+                    <span>Subir DNI </span>
+                    <input #dniFront class="no-input-display" type="file" accept="image/*"
+                        (change)="procesarDniFront(dniFront)">
+                </label>
+            </div>
+            <div *ngIf="imagenDniFront" class="img-preview-container">
+                <div class="img-preview" [ngStyle]="{'background-image':'url(' + imagenDniFront.src + ')'}">
+                </div>
+            </div>
+            <div *ngIf="!imagenDniBack">
+                <label class="image-upload-container btn btn-bwm">
+                    <span>Subir DNI</span>
+                    <input #dniFront class="no-input-display" type="file" accept="image/*"
+                        (change)="procesarDniBack(dniFront)">
+                </label>
+            </div>
+            <div *ngIf="imagenDniBack" class="img-preview-container">
+                <div class="img-preview" [ngStyle]="{'background-image':'url(' + imagenDniBack.src + ')'}">
+                </div>
+            </div>
+            <div *ngIf="!imagenActaDefuncion">
+                <label class="image-upload-container btn btn-bwm">
+                    <span>Subir Acta</span>
+                    <input #ActaDefuncion class="no-input-display" type="file" accept="image/*"
+                        (change)="procesarActaDefuncion(ActaDefuncion)">
+                </label>
+            </div>
+            <div *ngIf="imagenActaDefuncion" class="img-preview-container">
+                <div class="img-preview" [ngStyle]="{'background-image':'url(' + imagenActaDefuncion.src + ')'}">
+                </div>
+            </div>
+            <div class="col-1"></div>
+        </div>
+        <div class="form-row" style="margin-top: 20px;">
+            <button class="pointer col-3" (click)="substractFormStep()">Atrás</button>
+            <div class="col-1"></div>
+            <button class="pointer col-8" (click)="saveDocumentacion()">Finalizar</button>
+        </div>
+    </div>
+    <div class="col-2">
+    </div>
+</div>
+<div class="form-group" *ngIf="formStep == 4">
+    <label class="row">¡Empezamos el análisis de la documentacion recibida!</label>
+    <label class="row">Número de Tramite {{ Tramite.nroTramite }}</label>
+    <label class="row">Dentro de las próximas 24 horas hábiles, podras realizar el seguimiento de tu denuncia en nuestra
+        plataforma.</label>
+    <label class="row">A partir de este momento, en CNP tenemos 15 días corridos para darte una devolución.</label>
+</div>

@@ -1,0 +1,28 @@
+<app-header></app-header>
+<div id="opcionesDenuncia" *ngIf="option == null">
+    <div class="row">
+        <div class="col-3"></div>
+        <div class="col-6">
+            <label for="text" class="row">¡Hola! Ahora podés denunciar y seguir un siniestro 100% online</label>
+            <label for="text" class="row">Selecciona según sea el caso</label>
+            <div class="row">
+                <button type="button" class="button pointer col-5" (click)="denunciaOption('carga')">Comenzá
+                    tu denuncia</button>
+                <div class="col-1"></div>
+                <button type="button" class="button pointer col-5" (click)="denunciaOption('consulta')">Seguí tu
+                    denuncia</button>
+            </div>
+        </div>
+        <div class="col-3"></div>
+    </div>
+</div>
+
+<div id="CargaDenuncia" *ngIf="option == 'carga'">
+    <app-denuncia-siniestro>
+    </app-denuncia-siniestro>
+</div>
+<div id="ConsultaDenuncia" *ngIf="option == 'consulta'">
+    <app-consulta-siniestro>
+    </app-consulta-siniestro>
+</div>
+<app-footer></app-footer>

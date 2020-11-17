@@ -1,0 +1,237 @@
+<!-- TODO: Agregar estilos una vez lo entreguen -->
+<div class="row">
+    <div class="col-3">
+    </div>
+    <div class="col-6">
+        <label for="denuncia">Denuncia de Siniestro</label>
+        <app-breadcrumbs></app-breadcrumbs>
+        <div id="TipoSiniestro" *ngIf="step == 0">
+            <div class="row">
+                <br>
+                <label>Selecciona el tipo de Siniestro</label>
+                <br>
+                <label>Recordá que debes saber el Número del DNI del Asegurado y tu mail para iniciar el trámite.
+                    De no tener uno, podes crearlo y continuar luego.</label>
+            </div>
+            <div class="row">
+                <div *ngFor="let tipoSiniestro of tiposSiniestro; let i = index;trackBy: trackByIndex;">
+                    <div style="margin-left: 25px;">
+                        <button type="button"
+                            (click)="selectSiniestro(tipoSiniestro)">{{ tipoSiniestro.descripcion }}</button>
+                    </div>
+                </div>
+            </div>
+            <div class="row" style="margin-top: 10px;">
+                <button type="button" class="pointer col-2" (click)="initialPage()">Cancelar</button>
+            </div>
+        </div>
+        <div *ngIf="step == 1">
+            <div class="row" *ngIf="subTipoSiniestro == false">
+                <div class="col-3"></div>
+                <div class="col-6">
+                    <span *ngIf="tipoSiniestro.id == 1 || tipoSiniestro.id == 6 || tipoSiniestro.id == 7">
+                        A continuación, ingresa tu DNI y el DNI del asegurado
+                    </span>
+                    <span *ngIf="tipoSiniestro.id != 1">
+                        A continuación, ingresa tu DNI
+                    </span>
+                    <div class="row" *ngIf="tipoSiniestro.id == 1 || tipoSiniestro.id == 6 || tipoSiniestro.id == 7">
+                        <label>Tu número de documento:</label>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Escribí acá tu DNI"
+                                [(ngModel)]="dniBeneficiario" maxlength="8" (keydown)="numbersOnly($event)" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <div *ngIf="tipoSiniestro.id == 1 || tipoSiniestro.id == 6 || tipoSiniestro.id == 7">
+                            <label>El número de documento del asegurado:</label>
+                        </div>
+                        <div class="input-group mb-3">
+                            <input type="text" class="form-control" placeholder="Escribí acá el DNI del Asegurado"
+                                [(ngModel)]="dniAsegurado" maxlength="8" (keydown)="numbersOnly($event)" />
+                        </div>
+                    </div>
+                    <div class="row">
+                        <button type="button" class="pointer col-3" (click)="substractStep()">Atrás</button>
+                        <div class="col-1"></div>
+                        <button type="button" class="pointer col-8" (click)="verifyPolicy()">Continuar</button>
+                    </div>
+                </div>
+                <div class="col-3"></div>
+            </div>
+            <div *ngIf="subTipoSiniestro == true">
+                <div *ngIf="tipoSiniestro.id == 1 || tipoSiniestro.id == 6 || tipoSiniestro.id == 7">
+                    <div class="row">
+                        <div class="col-2"></div>
+                        <label class="col-8">
+                            Verificamos que sos un beneficiario de la póliza
+                        </label>
+                        <div class="col-2"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2"></div>
+                        <label class="col-8">
+                            Ahora indicanos la característica del siniestro
+                        </label>
+                        <div class="col-2"></div>
+                    </div>
+                    <div class="row">
+                        <div class="col-2"></div>
+                        <div *ngFor="let tipoMuerte of tiposMuerte; let i = index; trackBy: trackByIndex;">
+                            <button type="button"
+                                (click)="selectSingleSiniestro(tipoMuerte)">{{ tipoMuerte.descripcion }}</button>
+                        </div>
+                        <div class="col-2"></div>
+                    </div>
+                </div>
+                <div *ngIf="tipoSiniestro.id == 4">
+                    <div *ngFor="let tipoAccidente of tiposAccidente; let i = index;trackBy: trackByIndex;">
+                        <div style="margin-left: 100px;">
+                            <input type="checkbox" name="{{ tipoAccidente.descripcion }}" [value]="tipoAccidente"
+                                (click)="loadSiniestros(tipoAccidente)">
+                            <label>{{ tipoAccidente.descripcion }}</label>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 20px;">
+                        <div class="col-4"></div>
+                        <button type="button" class="pointer col-8" (click)="onClickStep()">Continuar</button>
+                    </div>
+                </div>
+                <div *ngIf="tipoSiniestro.id == 3">
+                    <div *ngFor="let tipoEnfermedad of tiposEnfermedad; let i = index;trackBy: trackByIndex;">
+                        <div style="margin-left: 100px;">
+                            <input type="checkbox" name="{{ tipoEnfermedad.descripcion }}" [value]="tipoEnfermedad"
+                                (click)="loadSiniestros(tipoEnfermedad)">
+                            <label>{{ tipoEnfermedad.descripcion }}</label>
+                        </div>
+                    </div>
+                    <div class="row" style="margin-top: 20px;">
+                        <button type="button" class="pointer col-3" (click)="substractStep()">Atrás</button>
+                        <div class="col-1"></div>
+                        <button type="button" class="pointer col-8" (click)="onClickStep()">Continuar</button>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <form id="AddOrEditTramiteSiniestro" [formGroup]="tramiteForms" (submit)="submitForm()">
+            <div *ngIf="step == 2">
+                <div class="form-group row">
+                    <div class="col-3"></div>
+                    <div class="col-6">
+                        <label>Seleccione la fecha de {{ fechaOpcion }}:</label>
+                        <div class="form-row">
+                            <input class="form-control" placeholder="yyyy-mm-dd" formControlName="fechaSiniestro"
+                                ngbDatepicker #fechaSiniestro="ngbDatepicker" (click)="fechaSiniestro.toggle()"
+                                [ngClass]="{ 'is-invalid': submited && f.fechaSiniestro.errors }">
+                            <div *ngIf="submited && f.fechaSiniestro.errors" class="invalid-feedback">
+                                <div *ngIf="f.fechaSiniestro.errors.required">Fecha requerida</div>
+                            </div>
+                        </div>
+                        <div class="row" style="margin-top: 20px;">
+                            <button type="button" class="pointer col-3" (click)="substractStep()">Atrás</button>
+                            <div class="col-1"></div>
+                            <button type="button" class="pointer col-8" (click)="validateDate()">Continuar</button>
+                        </div>
+                    </div>
+                    <div class="col-3"></div>
+                </div>
+            </div>
+            <div *ngIf="step == 3">
+                <div class="row">
+                    <div class="col-3"></div>
+                    <div class="col-6">
+                        <div>
+                            <label>Necesitamos saber dónde contactarte</label>
+                            <label>Te enviaremos un código a tu mail para validarlo</label>
+                        </div>
+                    </div>
+                    <div class="col-3"></div>
+                </div>
+                <div class="row">
+                    <div class="col-5">
+                        <label>Tu mail</label>
+                        <div class="row input-group mb-3">
+                            <input type="text" class="form-control" formControlName="email"
+                                placeholder="Escribí acá tu mail"
+                                [ngClass]="{ 'is-invalid': submited && f.email.errors }">
+                            <div *ngIf="submited && f.email.errors" class="invalid-feedback">
+                                <div *ngIf="f.email.errors.email">Debe ser un email válido</div>
+                                <div *ngIf="f.email.errors.required">Email requerido</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-2"></div>
+                    <div class="col-5">
+                        <label>Repetí tu mail</label>
+                        <div class="row input-group mb-3">
+                            <input type="text" class="form-control" formControlName="emailConfirmacion"
+                                placeholder="Confirmá acá tu mail"
+                                [ngClass]="{ 'is-invalid': submited && f.emailConfirmacion.errors }">
+                            <div *ngIf="submited && f.emailConfirmacion.errors" class="invalid-feedback">
+                                <div *ngIf="f.emailConfirmacion.errors.email">Debe ser un email válido</div>
+                                <div *ngIf="f.emailConfirmacion.errors.required">Email requerido</div>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-3"></div>
+                    <div class="col-6">
+                        <label>Tu teléfono celular</label>
+                        <div class="row input-group mb-3">
+                            <input type="text" class="form-control" formControlName="celular" maxlength="20"
+                                placeholder="Escribí acá tu celular"
+                                [ngClass]="{ 'is-invalid': submited && f.emailConfirmacion.errors }"
+                                (keydown)="numbersOnly($event)">
+                            <div *ngIf="submited && f.celular.errors" class="invalid-feedback">
+                                <div *ngIf="f.celular.errors.required">Celular requerido</div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="col-3"></div>
+                </div>
+                <div class="row" style="margin-top: 20px;">
+                    <div class="col-3"></div>
+                    <div class="row col-6">
+                        <button type="button" class="pointer col-3" (click)="substractStep()">Atrás</button>
+                        <div class="col-1"></div>
+                        <button type="submit" class="pointer col-8">Continuar</button>
+                    </div>
+                    <div class="col-3"></div>
+                </div>
+            </div>
+        </form>
+        <div *ngIf="step == 4">
+            <div *ngIf="mailVerification == false">
+                <div class="form-group">
+                    <label class="row">Ingrese el código que te enviamos para validar tu mail</label>
+                    <label class="row">Si no lo ves en bandeja de entrada, revisa el correo no deseado</label>
+                </div>
+                <div class="row input-group mb-3">
+                    <input type="text" class="form-control" [(ngModel)]="nroVerificacion"
+                        placeholder="Escribí acá el código de validación" (keydown)="numbersOnly($event)">
+                    <button type="button" (click)="MailValidation()">Verificar</button>
+                </div>
+            </div>
+            <div *ngIf="mailVerification == true">
+                <div class="form-row">
+                    <label>Validación exitosa, tu trámite ha comenzado</label>
+                </div>
+                <div class="form-row">
+                    <label>Tu número de trámite es: </label>
+                    <label style="font-weight:bold">{{ nroTramite }}</label>
+                </div>
+                <div class="row" style="margin-top: 20px;">
+                    <button type="button" class="pointer col-12" (click)="onClickStep()">Iniciar Carga
+                        de Documentación</button>
+                </div>
+            </div>
+        </div>
+        <div *ngIf="step == 5">
+            <app-carga-documentacion [NroTramite]="nroTramite">
+            </app-carga-documentacion>
+        </div>
+    </div>
+    <div class="col-3">
+    </div>
+</div>

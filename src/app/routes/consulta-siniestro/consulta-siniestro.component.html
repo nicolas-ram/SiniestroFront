@@ -1,0 +1,36 @@
+<!-- TODO: Agregar estilos una vez lo entreguen -->
+<div class="row">
+    <div class="col-3"></div>
+    <div class="col-6" *ngIf="tramite == null">
+        <label for="SeguimientoDenuncia">Seguimiento de Denuncia</label>
+        <div class="row">
+            <label for="">¿Sobre qué trámite querés consultar?</label>
+            <label for="">Ingresa el número de trámite</label>
+        </div>
+        <div class="row">
+            <input type="text" class="form-control" placeholder="Número de trámite" [(ngModel)]="nroTramite">
+        </div>
+        <div class="row" style="margin-top: 20px;">
+            <button type="button" class="pointer col-2" (click)="initialPage()">Cancelar</button>
+            <div class="col-1"></div>
+            <button type="button" class="pointer col-9" (click)="EstadoTramite(nroTramite)">Continuar</button>
+        </div>
+    </div>
+    <div *ngIf="tramite != null && tramite.estado == null">
+        <app-carga-documentacion [Tramite]="tramite">
+        </app-carga-documentacion>
+    </div>
+
+    <div class="col-6">
+        <!-- <div class="row" *ngIf="estadoTramite == 0">
+            <label for="">No exite dicho trámite. Ingrese un número de trámite correcto.</label>
+        </div> -->
+        <div class="row" *ngIf="estadoTramite == 1">
+            <label for="">Estamos analizando tu documentación.</label>
+        </div>
+        <div class="row" *ngIf="estadoTramite == 3">
+            <label for="">¡Tu trámite está aprobado!</label>
+        </div>
+    </div>
+    <div class="col-3"></div>
+</div>
